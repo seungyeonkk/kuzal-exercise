@@ -1,21 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ThemeProvider } from 'styled-components/native';
+import { theme } from './app/style/theme';
+import { NavigationContainer } from '@react-navigation/native';
+import StackNavigation from "./app/navigations/Stack";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>운동앱</Text>
-      <StatusBar style="auto"/>
-    </View>
+      <ThemeProvider theme={theme}>
+          <StatusBar style="light" backgroundColor={theme.background}/>
+          <NavigationContainer>
+              <StackNavigation/>
+          </NavigationContainer>
+      </ThemeProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
