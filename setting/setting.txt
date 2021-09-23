@@ -37,3 +37,6 @@
 
 3. styled-components 설정
  > npm install styled-components
+
+4. 아이콘 사용
+ > npm install --save react-native-vector-icons
