@@ -1,8 +1,10 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 
 import styled from "styled-components/native";
-import { Animated, StyleSheet, TextInput, Text } from 'react-native';
+import { Animated, StyleSheet, TextInput, Text, Button } from 'react-native';
 import TimerButton from "../components/buttons/TimerButton";
+import TimerCard from "../components/settings/TimerCard";
+import Timer from "../domains/Timer";
 
 const Container = styled.View`
     flex: 1;
@@ -20,12 +22,12 @@ const ContentContainer = styled.View`
 `;
 
 const ScrollContainer = styled.ScrollView`
-    flex: 3;
+    flex: 5;
     margin-top: 10px;
 `;
 
 const ButtonGroupContainer = styled.View`
-    flex: 1;
+    flex: 2;
 `;
 
 const ButtonGroup = styled.View`
@@ -59,19 +61,44 @@ const ExerciseTitleInput = styled.TextInput.attrs({
 
 const TimerSetting = () => {
     const [value, onChangeText] = React.useState('');
-    const ContentAnimation = useRef(new Animated.Value(500)).current;
+    const [timers, setTimers] = React.useState(
+        [ new Timer('EXERCISE'), new Timer('REST')]
+    );
+    const ContentAnimation = useRef(new Animated.Value(800)).current;
 
     const showBottomContainer = () => {
-        Animated.spring (
-            ContentAnimation, {
-                toValue : 100,
-                friction : 8,
-                tension : 70,
-                useNativeDriver: false
-        }).start();
+        Animated.sequence([
+            Animated.delay(200),
+            Animated.spring (
+                ContentAnimation, {
+                    toValue : 100,
+                    friction : 10,
+                    tension : 70,
+                    useNativeDriver: false
+                })
+        ]).start();
     };
 
     showBottomContainer();
+
+    // 타이머 추가
+    const addTimer = type => {
+        let newTimer = new Timer(type);
+        timers.push(newTimer);
+        setTimers([...timers]);
+    }
+
+    // 타이머 삭제
+    const removeTimer = id => {
+        for(let i = 0; i < timers.length; i++) {
+            if(timers[i].id == id) {
+                timers.splice(i, 1);
+            }
+        }
+        setTimers([...timers]);
+    }
+
+    // TODO: 헤더에 완료 버튼을 만들어야 함.
 
     return (
         <Container>
@@ -92,15 +119,25 @@ const TimerSetting = () => {
                         onChangeText={text => onChangeText(text)}
                         value={value}
                     />
-                    <ScrollContainer contentInset={{bottom: 5, top: 5}}>
+                    <ScrollContainer contentInset={{bottom: 15, top: 15}}>
                         {/* 운동시간, 휴식시간 목록 */}
+
+                        {timers.map( (timer, index) => (
+                            <TimerCard title={timer.title} key={index} onPress={ () => {
+                                removeTimer(timer.id);
+                            }}></TimerCard>
+                        ))}
 
                     </ScrollContainer>
                     {/* 운동시간, 휴식시간 추가 버튼 그룹 */}
                     <ButtonGroupContainer>
                         <ButtonGroup>
-                            <TimerButton title="운동 시간"></TimerButton>
-                            <TimerButton title="휴식 시간"></TimerButton>
+                            <TimerButton title="운동 시간" onPress={ () => {
+                                addTimer('EXERCISE');
+                            }}></TimerButton>
+                            <TimerButton title="휴식 시간" onPress={ () => {
+                                addTimer('REST');
+                            }}></TimerButton>
                         </ButtonGroup>
                     </ButtonGroupContainer>
                 </ContentContainer>

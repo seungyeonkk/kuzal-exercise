@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components/native";
-import { TouchableOpacity, Text } from "react-native";
+import { TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
 const ButtonView = styled.View`
@@ -17,18 +17,17 @@ const ButtonView = styled.View`
 `;
 
 const Title = styled.Text`
-    font-size: 25px;
+    font-size: 17px;
     color: #000000;
     margin-left: 10px;
 `;
 
 const TimerButton = props => {
 
-    // title, icon, onPress
-
+    // title, onPress
 
     return (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={props.onPress}>
             <ButtonView>
                 <Icon name='add' size={30} color={'#000000'}/>
                 <Title>{props.title}</Title>

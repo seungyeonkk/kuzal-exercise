@@ -20,12 +20,14 @@ const StackNavigation = () => {
         }}>
             <Stack.Screen name="Home" component={Home}
                 options={{
-                    headerShown: true
+                    headerShown: true,
+                    headerBackTitleVisible: false
                 }}
             />
             <Stack.Screen name="TimerSetting" component={TimerSetting}
                   options={{
-                      headerShown: true
+                      headerShown: true,
+                      headerBackTitleVisible: false
                   }}
             />
         </Stack.Navigator>
