@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components/native";
-import {TouchableOpacity, Text, StyleSheet} from "react-native";
+import {TouchableOpacity, StyleSheet} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
 const CardView = styled.View`
@@ -37,11 +37,11 @@ const TimeInput = styled.TextInput.attrs({
 const TimerCard = props => {
     // title, icon, onPress
 
-    const [time, setTime] = React.useState('');
+    const [time, setTime] = React.useState(props.timer.sec);
 
-    const onChangeTime = time => {
-        time = time.replace(/[^0-9]/g, '')
-        setTime(time);
+    const onChangeTime = text => {
+        props.timer.sec = text.replace(/[^0-9]/g, '')
+        setTime(props.timer.sec);
     }
 
     return (
@@ -52,9 +52,11 @@ const TimerCard = props => {
                 maxLength={3}
                 keyboardType='numeric'
                 onChangeText={onChangeTime}
-                value={time}
+                value={props.timer.sec}
             />
-            <TouchableOpacity style={styles.button} onPress={props.onPress}>
+            <TouchableOpacity style={styles.button} onPress={() => {
+                props.onPress(props.timer.id);
+            }}>
                 <Icon name='close-outline' size={30} color={'#000000'}/>
             </TouchableOpacity>
         </CardView>

@@ -1,7 +1,7 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useLayoutEffect } from "react";
 
 import styled from "styled-components/native";
-import { Animated, StyleSheet, TextInput, Text, Button } from 'react-native';
+import { Animated, StyleSheet, Button, Alert } from 'react-native';
 import TimerButton from "../components/buttons/TimerButton";
 import TimerCard from "../components/settings/TimerCard";
 import Timer from "../domains/Timer";
@@ -28,6 +28,7 @@ const ScrollContainer = styled.ScrollView`
 
 const ButtonGroupContainer = styled.View`
     flex: 2;
+    padding-top: 20px;
 `;
 
 const ButtonGroup = styled.View`
@@ -57,13 +58,32 @@ const ExerciseTitleInput = styled.TextInput.attrs({
     color: #000000;
     font-size: 35px;
     font-weight: bold;
+    margin-top: 10px;
 `
 
-const TimerSetting = () => {
+const TimerSetting = ({ navigation }) => {
     const [value, onChangeText] = React.useState('');
-    const [timers, setTimers] = React.useState(
-        [ new Timer('EXERCISE'), new Timer('REST')]
-    );
+    const [timers, setTimers] = React.useState([ new Timer('EXERCISE')]);
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTitle: '',
+            headerTintColor: '#ffffff',
+            headerStyle: {
+                backgroundColor: '#0080FF',
+                borderBottomColor: '#0080FF',
+                borderBottomWidth: 0,
+                shadowColor: 'transparent'
+            },
+            headerRight: () => (
+                <Button title="완료" color="#ffffff" onPress={() => {
+                    console.log("데이터 확인", timers);
+                    save();
+                }}/>
+            )
+        });
+    }, [timers]);
+
     const ContentAnimation = useRef(new Animated.Value(800)).current;
 
     const showBottomContainer = () => {
@@ -98,7 +118,20 @@ const TimerSetting = () => {
         setTimers([...timers]);
     }
 
-    // TODO: 헤더에 완료 버튼을 만들어야 함.
+    // 운동 저장
+    const save = () => {
+        // alert 저장하시겠습니까?
+        Alert.alert(
+            "알림",
+            "저장하시겠습니까?",
+            [{ text: "취소", style: "cancel" },
+                { text: "확인", onPress: () => {
+                    // TODO: 내부 디비에 저장
+                }}
+            ],
+            { cancelable: false }
+        );
+    }
 
     return (
         <Container>
@@ -113,7 +146,7 @@ const TimerSetting = () => {
             </BackGroundContainer>
             <Animated.View style={[{top: ContentAnimation}, styles.animatedView]}>
                 <ContentContainer>
-                    {/* 운동명 입력 input -> 컴포넌트로? */}
+                    {/* 운동명 입력 input */}
                     <ExerciseTitleInput
                         placeholder={"운동명을 입력해주세요."}
                         onChangeText={text => onChangeText(text)}
@@ -121,13 +154,9 @@ const TimerSetting = () => {
                     />
                     <ScrollContainer contentInset={{bottom: 15, top: 15}}>
                         {/* 운동시간, 휴식시간 목록 */}
-
                         {timers.map( (timer, index) => (
-                            <TimerCard title={timer.title} key={index} onPress={ () => {
-                                removeTimer(timer.id);
-                            }}></TimerCard>
+                            <TimerCard title={timer.title} key={index} timer={timer} onPress={removeTimer}></TimerCard>
                         ))}
-
                     </ScrollContainer>
                     {/* 운동시간, 휴식시간 추가 버튼 그룹 */}
                     <ButtonGroupContainer>

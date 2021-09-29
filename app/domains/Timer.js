@@ -12,16 +12,16 @@ export default class Timer {
         this.id = CommonUtil.getCurrentTime();
         this.type = type;
         this.title = this.getTitle(type);
+        this.sec = "30";
     }
 
     getTitle(type) {
         if(type == "EXERCISE") {
-           return '운동';
+            return '운동';
         }else if(type == "REST") {
             return '휴식';
         }else if(type == "START") {
             return '시작';
         }
-
     }
 }
