@@ -5,6 +5,9 @@ import { Animated, StyleSheet, Button, Alert } from 'react-native';
 import TimerButton from "../components/buttons/TimerButton";
 import TimerCard from "../components/settings/TimerCard";
 import Timer from "../domains/Timer";
+import Exericse from "../domains/Exercise";
+import AlertUtil from "../utils/AlertUtil";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Container = styled.View`
     flex: 1;
@@ -77,12 +80,11 @@ const TimerSetting = ({ navigation }) => {
             },
             headerRight: () => (
                 <Button title="완료" color="#ffffff" onPress={() => {
-                    console.log("데이터 확인", timers);
                     save();
                 }}/>
             )
         });
-    }, [timers]);
+    }, [timers, value]);
 
     const ContentAnimation = useRef(new Animated.Value(800)).current;
 
@@ -120,13 +122,26 @@ const TimerSetting = ({ navigation }) => {
 
     // 운동 저장
     const save = () => {
-        // alert 저장하시겠습니까?
         Alert.alert(
             "알림",
             "저장하시겠습니까?",
             [{ text: "취소", style: "cancel" },
-                { text: "확인", onPress: () => {
-                    // TODO: 내부 디비에 저장
+                { text: "확인", onPress: async () => {
+
+                    try {
+                        const newExercise = new Exericse(value, timers);
+                        let exercises = JSON.parse(await AsyncStorage.getItem('exercises'));
+
+                        if(exercises == null) {
+                            const newExercises = [newExercise];
+                            await AsyncStorage.setItem('exercises', JSON.stringify(newExercises));
+                        }else {
+                            exercises.push(newExercise);
+                            await AsyncStorage.setItem('exercises', JSON.stringify(exercises));
+                        }
+                    } catch (e) {
+                        AlertUtil.show('타이머 등록을 실패하였습니다.');
+                    }
                 }}
             ],
             { cancelable: false }
