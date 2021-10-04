@@ -3,6 +3,7 @@ import {createStackNavigator} from "@react-navigation/stack";
 import { theme } from "../style/theme";
 import Home from "../pages/Home";
 import TimerSetting from "../pages/TimerSetting";
+import {Button} from "react-native";
 
 const Stack = createStackNavigator();
 
@@ -21,7 +22,7 @@ const StackNavigation = () => {
             <Stack.Screen name="Home" component={Home}
                 options={{
                     headerShown: true,
-                    headerBackTitleVisible: false
+                    headerBackTitlVisible: false
                 }}
             />
             <Stack.Screen name="TimerSetting" component={TimerSetting}
