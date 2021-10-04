@@ -28,6 +28,8 @@
   ]
  }
 
+ "exercises" : [ {...}, {...} ]
+
 
 2. navigation 설정
 참고: https://reactnavigation.org/docs/getting-started/
