@@ -1,9 +1,9 @@
 import React from 'react';
 import {createStackNavigator} from "@react-navigation/stack";
 import { theme } from "../style/theme";
-import Home from "../pages/Home";
-import TimerSetting from "../pages/TimerSetting";
-import {Button} from "react-native";
+import HomePage from "../pages/HomePage";
+import TimerSettingPage from "../pages/TimerSettingPage";
+import TimerPage from "../pages/TimerPage";
 
 const Stack = createStackNavigator();
 
@@ -19,17 +19,22 @@ const StackNavigation = () => {
                 color: theme.white
             }
         }}>
-            <Stack.Screen name="Home" component={Home}
+            <Stack.Screen name="HomePage" component={HomePage}
                 options={{
                     headerShown: true,
-                    headerBackTitlVisible: false
+                    headerBackTitleVisible: false
                 }}
             />
-            <Stack.Screen name="TimerSetting" component={TimerSetting}
-                  options={{
-                      headerShown: true,
-                      headerBackTitleVisible: false
-                  }}
+            <Stack.Screen name="TimerSettingPage" component={TimerSettingPage}
+                options={{
+                    headerShown: true,
+                    headerBackTitleVisible: false
+                }}
+            />
+            <Stack.Screen name="TimerPage" component={TimerPage}
+                options={{
+                    headerShown: false
+                }}
             />
         </Stack.Navigator>
     );
