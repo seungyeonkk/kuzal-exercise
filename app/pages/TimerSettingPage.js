@@ -64,7 +64,7 @@ const ExerciseTitleInput = styled.TextInput.attrs({
     margin-top: 10px;
 `
 
-const TimerSetting = ({ navigation }) => {
+const TimerSettingPage = ({ navigation }) => {
     const [value, onChangeText] = React.useState('');
     const [timers, setTimers] = React.useState([ new Timer('EXERCISE')]);
 
@@ -85,6 +85,7 @@ const TimerSetting = ({ navigation }) => {
             )
         });
     }, [timers, value]);
+
 
     const ContentAnimation = useRef(new Animated.Value(800)).current;
 
@@ -129,6 +130,11 @@ const TimerSetting = ({ navigation }) => {
                 { text: "확인", onPress: async () => {
 
                     try {
+                        if(!value) {
+                            AlertUtil.show('운동명을 입력해주세요.');
+                            return;
+                        }
+
                         const newExercise = new Exericse(value, timers);
                         let exercises = JSON.parse(await AsyncStorage.getItem('exercises'));
 
@@ -139,6 +145,9 @@ const TimerSetting = ({ navigation }) => {
                             exercises.push(newExercise);
                             await AsyncStorage.setItem('exercises', JSON.stringify(exercises));
                         }
+
+                        navigation.goBack();
+
                     } catch (e) {
                         AlertUtil.show('타이머 등록을 실패하였습니다.');
                     }
@@ -203,4 +212,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default TimerSetting;
+export default TimerSettingPage;
