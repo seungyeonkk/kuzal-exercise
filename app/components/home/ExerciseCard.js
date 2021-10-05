@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components/native";
-import {TouchableOpacity, StyleSheet} from "react-native";
+import {TouchableOpacity, StyleSheet, Text} from "react-native";
 
 const CardView = styled.View`
     flex-direction: row;
@@ -21,22 +21,29 @@ const Title = styled.Text`
     font-weight: bold;
     color: #000000;
     margin-left: 10px;
-    flex:6;
+    flex:5;
 `
 
 const ExerciseCard = props => {
     // title, onPress
-
-    console.log(props.exercise)
-
     // TODO: 운동 설정 화면 이동
 
     return (
         <CardView>
             <Title>{props.title}</Title>
+            <TouchableOpacity style={styles.button} onPress={props.onPress}>
+                <Text>운동시작</Text>
+            </TouchableOpacity>
         </CardView>
     );
 }
 
+const styles = StyleSheet.create({
+
+    button: {
+        flex: 1
+    }
+
+});
 
 export default ExerciseCard;
