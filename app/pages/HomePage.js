@@ -1,18 +1,18 @@
 import React, {useLayoutEffect, useEffect} from "react";
-import { View, Text, Button } from "react-native";
+import { Button } from "react-native";
 import styled from "styled-components/native";
 import ExerciseCard from "../components/home/ExerciseCard";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import TimerCard from "../components/settings/TimerCard";
-import Exercise from "../domains/Exercise";
+import { useIsFocused } from '@react-navigation/native';
 
-const Container = styled.View`
+
+const ScrollContainer = styled.ScrollView`
     flex: 1;
     padding: 15px;
 `;
 
-const Home = ({ navigation }) => {
-
+const HomePage = ({ navigation }) => {
+    const isFocused = useIsFocused();
     const [exercises, setExercises] = React.useState([]);
 
     useLayoutEffect(() => {
@@ -27,37 +27,39 @@ const Home = ({ navigation }) => {
             },
             headerRight: () => (
                 <Button title="추가" color="#ffffff" onPress={() => {
-                    navigation.navigate('TimerSetting');
+                    navigation.navigate('TimerSettingPage');
                 }}/>
             )
         });
+
     }, []);
 
     useEffect( () => {
 
-        // TODO: 조회한 운동목록 화면에 표시 되도록
-        async function getExercises() {
+        const getExercises = async () => {
             // useEffect에서 async를 하면 sideEffect가 발생하는걸 해결함
             const exercisesFromStorage = await AsyncStorage.getItem('exercises');
-            console.log("조회한 목록", exercisesFromStorage);
             setExercises(JSON.parse(exercisesFromStorage));
         }
-        getExercises();
 
+        if(isFocused) getExercises();
 
-        console.log("조회한 목록2 ", exercises);
+    }, [isFocused]);
 
-    }, []);
-
+    // 타이머 화면 이동
+    const goTimerPage = (exercise) => {
+        navigation.navigate('TimerPage', {exercise: exercise});
+    }
 
     return (
-        <Container>
-            {/*{exercises.map( (exercise, index) => (
-                <ExerciseCard title={exercise.name} key={index}></ExerciseCard>
-            ))}*/}
-
-        </Container>
+        <ScrollContainer>
+            {exercises.map( (exercise, index) => (
+                <ExerciseCard title={exercise.name} key={index} onPress={ () => {
+                    goTimerPage(exercise);
+                }}></ExerciseCard>
+            ))}
+        </ScrollContainer>
     );
 }
 
-export default Home;
+export default HomePage;
